@@ -1,33 +1,44 @@
 # Student Management System
 
-A full-stack web application for managing student records. The application supports creating, viewing, updating, and deleting student information, with validation and MongoDB persistence.
+A full-stack web application for managing student records, built with **React, Vite, Node.js, Express, and MongoDB**. It provides a simple interface for creating, viewing, updating, and deleting student information, with server-side validation and database persistence.
 
 ## Features
 
-- Add new student records
-- View the list of students
-- View individual student details
-- Edit existing student information
-- Delete student records with confirmation
-- Validate required fields and email addresses
-- Prevent duplicate student IDs and email addresses
-- Store student records in MongoDB
-- Provide frontend and backend error handling
+- **Add Students** — Create student records with the required information.
+- **View Students** — Display student records in the application.
+- **View Student Details** — View individual student information.
+- **Edit Student Records** — Update existing student information.
+- **Delete Students** — Remove student records.
+- **Input Validation** — Validate student data before saving.
+- **Duplicate Prevention** — Prevent duplicate student IDs and email addresses where enforced by the backend.
+- **MongoDB Integration** — Store student records in a database.
+- **REST API** — Handle student-related operations through Express API endpoints.
+- **Error Handling** — Handle invalid input, API errors, and database-related errors.
+- **Automated Tests** — Run backend tests using Node.js's built-in test runner.
+- **Production Build** — Build the frontend using Vite.
 
-## Technology Stack
+## Tech Stack
 
-**Frontend**
+### Frontend
 - React
 - Vite
-- CSS
+- JavaScript
+- HTML5
+- CSS3
 
-**Backend**
+### Backend
 - Node.js
 - Express.js
 - Mongoose
+- REST API
 
-**Database**
+### Database
 - MongoDB
+
+### Testing and Development
+- Node.js built-in test runner
+- npm
+- Git and GitHub
 
 ## Project Structure
 
@@ -41,40 +52,73 @@ student-management-system/
 │   │   ├── utils/
 │   │   ├── app.js
 │   │   └── server.js
-│   ├── test/
+│   ├── tests/
 │   ├── .env.example
 │   └── package.json
+│
 ├── frontend/
 │   ├── src/
 │   ├── .env.example
 │   └── package.json
+│
+├── .gitignore
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
+*Note: The structure above summarizes the main project directories. Individual files may vary as the project develops.*
+
 ## Prerequisites
 
-Install the following before running the project:
+Install the following before running the application:
 
-- Node.js and npm
-- MongoDB Community Server, running locally, or an accessible MongoDB instance
-- A code editor such as Visual Studio Code
+- [Node.js](https://nodejs.org/) — preferably an LTS version.
+- npm — included with Node.js.
+- [MongoDB Community Server](https://www.mongodb.com/try/download/community) — for a local MongoDB database.
+- A code editor such as [Visual Studio Code](https://code.visualstudio.com/).
 
-## Installation
+Make sure MongoDB is running before starting the application.
 
-Clone or extract the project, then open a terminal in the project root.
+## Installation and Setup
 
-Install the project dependencies:
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/Amal0006/student-management-system.git
+```
+
+### 2. Open the project directory
+
+```bash
+cd student-management-system
+```
+
+### 3. Install dependencies
+
+Run the following command from the project root:
 
 ```bash
 npm run install:all
 ```
 
-Create the backend environment file by copying `backend/.env.example` to `backend/.env`.
+This installs the backend and frontend dependencies. If the root dependencies have not been installed yet, run:
 
-If the frontend requires environment variables, copy `frontend/.env.example` to `frontend/.env` as well.
+```bash
+npm install
+```
 
-Configure the MongoDB connection string in `backend/.env`. For a local MongoDB instance, the configuration can look like this:
+### 4. Configure the backend environment
+
+Create a `.env` file inside the `backend` directory by copying `backend/.env.example`.
+
+On Windows PowerShell:
+
+```powershell
+Copy-Item backend/.env.example backend/.env
+```
+
+Open `backend/.env` and configure the values:
 
 ```env
 PORT=5000
@@ -83,9 +127,29 @@ CLIENT_ORIGIN=http://localhost:5173
 NODE_ENV=development
 ```
 
-Use the variable names expected by your provided `.env.example` files.
+These settings configure the backend port, MongoDB connection, frontend origin, and application environment.
 
-## Run the Application
+If your MongoDB instance uses a different connection string, update `MONGODB_URI` accordingly.
+
+### 5. Configure the frontend environment
+
+The frontend example file is `frontend/.env.example`.
+
+To create a local environment file in PowerShell:
+
+```powershell
+Copy-Item frontend/.env.example frontend/.env
+```
+
+Configure `frontend/.env` with:
+
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+Ensure that the API base URL matches the backend address and API prefix used by the application.
+
+## Running the Application
 
 From the project root, run:
 
@@ -93,58 +157,100 @@ From the project root, run:
 npm run dev
 ```
 
-The frontend is available at:
+This starts the frontend and backend development servers using the root development script.
 
-http://localhost:5173/
+Open the application in your browser:
 
-The backend API runs at:
+- **Frontend:** http://localhost:5173/
+- **Backend:** http://localhost:5000/
 
-http://localhost:5000/
+The backend URL is the server address; individual API endpoints are available under the API prefix configured by the application.
 
 Keep the terminal running while using the application.
 
-## Validation and Data Persistence
-
-The application validates student information and rejects invalid or incomplete submissions. Student IDs and email addresses must be unique. Student records are stored in MongoDB and remain available after refreshing the browser, provided the database is running and the records have been saved successfully.
-
 ## Testing
 
-Run the backend automated tests:
+Run the backend automated tests from the project root:
 
 ```bash
 npm test
 ```
 
-Build the frontend for production:
+The test script delegates to the backend test command.
+
+## Production Build
+
+Build the frontend for production by running:
 
 ```bash
 npm run build
 ```
 
-The backend test suite checks input validation, email normalization, missing required fields, and related validation scenarios.
+Vite generates the production build in the frontend's `dist` directory.
 
 ## Troubleshooting
 
-**MongoDB connection error**
+### MongoDB connection error
+
 - Ensure MongoDB is installed and running.
-- Check `MONGODB_URI` in `backend/.env`.
+- Verify the `MONGODB_URI` value in `backend/.env`.
+- Check that the database host and port are correct.
 
-**Frontend cannot reach the backend**
-- Confirm the backend is running on port 5000.
-- Check the API URL and `CLIENT_ORIGIN` configuration.
+### Frontend cannot connect to the backend
 
-**Port already in use**
-- Stop the other process using the port or configure a different port consistently.
+- Confirm that both development servers are running.
+- Verify `VITE_API_BASE_URL` in `frontend/.env`.
+- Check that the frontend API URL matches the backend API prefix.
+- Review the backend terminal for errors.
 
-**Dependencies missing**
-- Run `npm run install:all` from the project root.
+### Port already in use
 
-## Security and Submission
+Another application may already be using port `5000` or `5173`. Stop the conflicting process or configure an available port, making sure the frontend API URL matches the backend configuration.
 
-- Do not commit `.env` files containing private credentials.
-- Keep `.env.example` files with placeholder configuration values.
-- Do not include `node_modules` in the submission package.
+### Dependencies or scripts fail
+
+Run the commands from the project root and confirm that Node.js and npm are installed:
+
+```bash
+node --version
+npm --version
+```
+
+If installation fails, review the terminal error before removing or reinstalling dependencies.
+
+## Security Notes
+
+- Do not commit `.env` files or database credentials to GitHub.
+- Keep `.env.example` files limited to placeholder or local development values.
+- Validate incoming data on the backend.
+- Use appropriate access controls before deploying the application for real users.
+- Configure production database credentials and environment variables securely.
 
 ## Project Status
 
-The project has been manually tested for CRUD operations, validation, and MongoDB persistence. The backend automated tests and frontend production build have also passed in the development environment.
+The project includes student record CRUD operations, backend validation, MongoDB integration, backend tests, and a frontend production build.
+
+Before deployment, verify the latest code, environment configuration, test results, and production database settings.
+
+## Future Improvements
+
+Potential enhancements include:
+
+- Authentication and role-based access control.
+- Search, filtering, and pagination.
+- Student profile images and document uploads.
+- Dashboard statistics and reports.
+- Responsive UI improvements.
+- Cloud deployment and production monitoring.
+
+## Author
+
+**Amal S**
+
+GitHub: [Amal0006](https://github.com/Amal0006)
+
+Portfolio: [amal0006.github.io](https://amal0006.github.io)
+
+## License
+
+No license has been specified yet. Add a `LICENSE` file if you intend to distribute the project under an open-source license.
