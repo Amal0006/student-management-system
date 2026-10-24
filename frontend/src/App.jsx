@@ -141,7 +141,7 @@ export default function App() {
       <button className="brand brand-button" onClick={goBack} aria-label="CampusDesk home"><span className="brand-mark"><GraduationCap size={23}/></span><span><strong>campus<span className="brand-accent">desk</span></strong><small>STUDENT WORKSPACE</small></span></button>
       <div className="nav-label">WORKSPACE</div>
       <button className={`nav-item ${screen.type === 'list' ? 'active' : ''}`} onClick={goBack}><LayoutDashboard size={17}/> Overview <ChevronRight className="nav-chevron" size={15}/></button>
-      <button className={`nav-item ${screen.type === 'details' ? 'active' : ''}`} onClick={() => { if (students[0]) openDetails(students[0]); else notify('error', 'Add a student record first to view details.'); }}><Users size={17}/> Students <span className="nav-count">{students.length}</span></button>
+      <button className={`nav-item ${screen.type === 'list' ? 'active' : ''}`} onClick={goBack}><Users size={17}/> Students <span className="nav-count">{students.length}</span></button>
       <button className={`nav-item ${screen.type === 'form' && screen.mode === 'add' ? 'active' : ''}`} onClick={openAdd}><Plus size={17}/> Add student</button>
       <div className="sidebar-bottom"><div className="sidebar-note"><div className="note-icon"><BookOpen size={17}/></div><div><strong>Records, made simple</strong><p>A focused space for the details that keep your campus moving.</p></div></div><div className="sidebar-footer"><span className="online-dot"/> Workspace ready <span className="footer-version">v1.0</span></div></div>
     </aside>
