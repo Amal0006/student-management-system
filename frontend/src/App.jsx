@@ -12,7 +12,7 @@ const REQUIRED = ['studentId', 'firstName', 'lastName', 'email', 'course'];
 async function request(path, options = {}) {
   let response;
   try {
-    response = await fetch(\`\${API_BASE}\${path}\`, {
+    response = await fetch(`${API_BASE}${path}`, {
       ...options,
       headers: { ...(options.body ? { 'Content-Type': 'application/json' } : {}), ...options.headers }
     });
@@ -35,8 +35,8 @@ function validate(form) {
   if (form.phone && form.phone.trim().length > 30) errors.phone = 'Phone must be 30 characters or fewer.';
   return errors;
 }
-function initials(student) { return \`\${student.firstName?.[0] || ''}\${student.lastName?.[0] || ''}\`.toUpperCase(); }
-function fullName(student) { return \`\${student.firstName || ''} \${student.lastName || ''}\`.trim(); }
+function initials(student) { return `${student.firstName?.[0] || ''}${student.lastName?.[0] || ''}`.toUpperCase(); }
+function fullName(student) { return `${student.firstName || ''} ${student.lastName || ''}`.trim(); }
 
 export default function App() {
   const [students, setStudents] = useState([]);
@@ -84,7 +84,7 @@ export default function App() {
     if (Object.keys(errors).length) return;
     setSaving(true);
     const isEdit = screen.mode === 'edit';
-    const path = isEdit ? \`/students/\${screen.student._id}\` : '/students';
+    const path = isEdit ? `/students/${screen.student._id}` : '/students';
     try {
       const result = await request(path, { method: isEdit ? 'PUT' : 'POST', body: JSON.stringify(Object.fromEntries(Object.entries(form).map(([k, v]) => [k, v.trim()]))) });
       if (isEdit) setStudents((current) => current.map((s) => s._id === result.data._id ? result.data : s));
@@ -97,9 +97,9 @@ export default function App() {
     } finally { setSaving(false); }
   }
   async function deleteStudent(student) {
-    if (!window.confirm(\`Delete \${fullName(student)} (\${student.studentId})? This action cannot be undone.\`)) return;
+    if (!window.confirm(`Delete ${fullName(student)} (${student.studentId})? This action cannot be undone.`)) return;
     try {
-      await request(\`/students/\${student._id}\`, { method: 'DELETE' });
+      await request(`/students/${student._id}`, { method: 'DELETE' });
       setStudents((current) => current.filter((s) => s._id !== student._id));
       if (screen.type !== 'list') setScreen({ type: 'list', student: null });
       notify('success', 'Student deleted successfully.');
@@ -140,15 +140,15 @@ export default function App() {
     <aside className="sidebar">
       <button className="brand brand-button" onClick={goBack} aria-label="CampusDesk home"><span className="brand-mark"><GraduationCap size={23}/></span><span><strong>campus<span className="brand-accent">desk</span></strong><small>STUDENT WORKSPACE</small></span></button>
       <div className="nav-label">WORKSPACE</div>
-      <button className={\`nav-item \${screen.type === 'list' ? 'active' : ''}\`} onClick={goBack}><LayoutDashboard size={17}/> Overview <ChevronRight className="nav-chevron" size={15}/></button>
-      <button className={\`nav-item \${screen.type === 'details' ? 'active' : ''}\`} onClick={() => { if (students[0]) openDetails(students[0]); else notify('error', 'Add a student record first to view details.'); }}><Users size={17}/> Students <span className="nav-count">{students.length}</span></button>
-      <button className={\`nav-item \${screen.type === 'form' && screen.mode === 'add' ? 'active' : ''}\`} onClick={openAdd}><Plus size={17}/> Add student</button>
+      <button className={`nav-item ${screen.type === 'list' ? 'active' : ''}`} onClick={goBack}><LayoutDashboard size={17}/> Overview <ChevronRight className="nav-chevron" size={15}/></button>
+      <button className={`nav-item ${screen.type === 'details' ? 'active' : ''}`} onClick={() => { if (students[0]) openDetails(students[0]); else notify('error', 'Add a student record first to view details.'); }}><Users size={17}/> Students <span className="nav-count">{students.length}</span></button>
+      <button className={`nav-item ${screen.type === 'form' && screen.mode === 'add' ? 'active' : ''}`} onClick={openAdd}><Plus size={17}/> Add student</button>
       <div className="sidebar-bottom"><div className="sidebar-note"><div className="note-icon"><BookOpen size={17}/></div><div><strong>Records, made simple</strong><p>A focused space for the details that keep your campus moving.</p></div></div><div className="sidebar-footer"><span className="online-dot"/> Workspace ready <span className="footer-version">v1.0</span></div></div>
     </aside>
     <main className="main-area">
       <header className="topbar"><div className="breadcrumb"><span>Workspace</span><ChevronRight size={14}/><strong>{pageTitle}</strong></div><div className="topbar-right"><span className="connection-label"><span className="status-dot"/> API workspace</span><div className="top-avatar">CD</div></div></header>
       <section className="content">
-        {notice && <div className={\`toast \${notice.type}\`} role="status"><span>{notice.type === 'success' ? <CheckCircle2 size={18}/> : <AlertCircle size={18}/>}</span>{notice.message}<button aria-label="Dismiss notification" onClick={() => setNotice(null)}><X size={16}/></button></div>}
+        {notice && <div className={`toast ${notice.type}`} role="status"><span>{notice.type === 'success' ? <CheckCircle2 size={18}/> : <AlertCircle size={18}/>}</span>{notice.message}<button aria-label="Dismiss notification" onClick={() => setNotice(null)}><X size={16}/></button></div>}
         {screen.type === 'list' && <>
           <div className="page-heading"><div><div className="eyebrow">YOUR WORKSPACE <span className="eyebrow-line"/></div><h1>Student directory<span className="heading-period">.</span></h1><p>A thoughtful overview of your student records, all in one place.</p></div><button className="primary-btn" onClick={openAdd}><Plus size={17}/> Add student</button></div>
           <div className="welcome-strip"><div className="welcome-symbol"><GraduationCap size={23}/></div><div><strong>Your student workspace</strong><p>Keep details accurate and your records easy to find.</p></div><span className="welcome-tag"><span className="status-dot"/> Live workspace</span></div>
@@ -160,7 +160,7 @@ export default function App() {
           <div className="panel">
             <div className="panel-heading"><div><div className="eyebrow">RECORDS</div><h2>All students</h2><p>Browse your directory and manage individual records.</p></div><button className="icon-btn" onClick={loadStudents} title="Refresh student list" aria-label="Refresh student list"><RefreshCw size={16}/></button></div>
             <div className="toolbar"><div className="search-box"><Search size={17}/><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search by name, ID, email or course..." aria-label="Search students"/>{search && <button aria-label="Clear search" onClick={() => setSearch('')}><X size={15}/></button>}</div><span className="result-count">{visibleStudents.length} {visibleStudents.length === 1 ? 'record' : 'records'}</span></div>
-            {loading ? <div className="state-box"><LoaderCircle className="spin" size={28}/><strong>Loading your directory</strong><span>Connecting to your student database…</span></div> : listError ? <div className="state-box error-state"><AlertCircle size={30}/><strong>Could not load students</strong><span>{listError}</span><button className="secondary-btn" onClick={loadStudents}><RefreshCw size={15}/> Try again</button></div> : visibleStudents.length === 0 ? <div className="state-box"><div className="empty-icon"><Users size={26}/></div><strong>{search ? 'No matching students' : 'Your directory starts here'}</strong><span>{search ? 'Try another name, ID, email, or course.' : 'Add your first student to start building your directory.'}</span>{!search && <button className="primary-btn" onClick={openAdd}><Plus size={16}/> Add first student</button>}</div> : <div className="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>COURSE / DEPARTMENT</th><th>EMAIL ADDRESS</th><th className="actions-heading">ACTIONS</th></tr></thead><tbody>{visibleStudents.map((student) => <tr key={student._id}><td><button className="student-cell" onClick={() => openDetails(student)}><span className="student-avatar">{initials(student)}</span><span><strong>{fullName(student)}</strong><small>{student.yearOrSemester || 'Year / semester not set'}</small></span></button></td><td><span className="id-chip">{student.studentId}</span></td><td><span className="course-text">{student.course}</span></td><td><span className="email-text">{student.email}</span></td><td><div className="row-actions"><button className="action-btn" title="View details" aria-label={\`View \${fullName(student)}\`} onClick={() => openDetails(student)}><Eye size={16}/></button><button className="action-btn" title="Edit student" aria-label={\`Edit \${fullName(student)}\`} onClick={() => openEdit(student)}><Pencil size={15}/></button><button className="action-btn delete-action" title="Delete student" aria-label={\`Delete \${fullName(student)}\`} onClick={() => deleteStudent(student)}><Trash2 size={15}/></button></div></td></tr>)}</tbody></table></div>}
+            {loading ? <div className="state-box"><LoaderCircle className="spin" size={28}/><strong>Loading your directory</strong><span>Connecting to your student database…</span></div> : listError ? <div className="state-box error-state"><AlertCircle size={30}/><strong>Could not load students</strong><span>{listError}</span><button className="secondary-btn" onClick={loadStudents}><RefreshCw size={15}/> Try again</button></div> : visibleStudents.length === 0 ? <div className="state-box"><div className="empty-icon"><Users size={26}/></div><strong>{search ? 'No matching students' : 'Your directory starts here'}</strong><span>{search ? 'Try another name, ID, email, or course.' : 'Add your first student to start building your directory.'}</span>{!search && <button className="primary-btn" onClick={openAdd}><Plus size={16}/> Add first student</button>}</div> : <div className="table-wrap"><table><thead><tr><th>STUDENT</th><th>STUDENT ID</th><th>COURSE / DEPARTMENT</th><th>EMAIL ADDRESS</th><th className="actions-heading">ACTIONS</th></tr></thead><tbody>{visibleStudents.map((student) => <tr key={student._id}><td><button className="student-cell" onClick={() => openDetails(student)}><span className="student-avatar">{initials(student)}</span><span><strong>{fullName(student)}</strong><small>{student.yearOrSemester || 'Year / semester not set'}</small></span></button></td><td><span className="id-chip">{student.studentId}</span></td><td><span className="course-text">{student.course}</span></td><td><span className="email-text">{student.email}</span></td><td><div className="row-actions"><button className="action-btn" title="View details" aria-label={`View ${fullName(student)}`} onClick={() => openDetails(student)}><Eye size={16}/></button><button className="action-btn" title="Edit student" aria-label={`Edit ${fullName(student)}`} onClick={() => openEdit(student)}><Pencil size={15}/></button><button className="action-btn delete-action" title="Delete student" aria-label={`Delete ${fullName(student)}`} onClick={() => deleteStudent(student)}><Trash2 size={15}/></button></div></td></tr>)}</tbody></table></div>}
             {!loading && !listError && visibleStudents.length > 0 && <div className="table-footer">Showing <strong>{visibleStudents.length}</strong> of <strong>{students.length}</strong> records <span className="footer-separator">·</span> Student data is saved to your database</div>}
           </div>
         </>}
@@ -189,6 +189,6 @@ export default function App() {
 }
 
 function Field({ label, name, required, value, error, onChange, placeholder, type = 'text' }) {
-  return <div className="field"><label htmlFor={name}>{label}{required && <span> *</span>}</label><input id={name} name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} aria-invalid={Boolean(error)} aria-describedby={error ? \`\${name}-error\` : undefined} maxLength={name === 'phone' ? 30 : name === 'studentId' ? 80 : name === 'yearOrSemester' ? 50 : 254}/>{error && <small className="field-error" id={\`\${name}-error\`}>{error}</small>}</div>;
+  return <div className="field"><label htmlFor={name}>{label}{required && <span> *</span>}</label><input id={name} name={name} type={type} value={value} onChange={onChange} placeholder={placeholder} aria-invalid={Boolean(error)} aria-describedby={error ? `${name}-error` : undefined} maxLength={name === 'phone' ? 30 : name === 'studentId' ? 80 : name === 'yearOrSemester' ? 50 : 254}/>{error && <small className="field-error" id={`${name}-error`}>{error}</small>}</div>;
 }
 function DetailItem({ icon, label, value }) { return <div className="detail-item"><div className="detail-item-icon">{icon || <BookOpen size={17}/>}</div><div><span>{label}</span><strong>{value}</strong></div></div>; }
