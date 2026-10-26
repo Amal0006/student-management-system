@@ -218,3 +218,61 @@ tbody tr:hover{background:#f7f8fc}
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}
 }
+/* CampusDesk — Login form spacing refinement */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.login-form label {
+  display: block;
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.login-form input {
+  display: block;
+  width: 100%;
+  height: 54px;
+  margin: 0 0 18px;
+  padding: 0 17px;
+  border: 1px solid #e3ddd3;
+  border-radius: 12px;
+  background: #fffefa;
+  color: var(--ink);
+  font: inherit;
+  font-size: 12px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.login-form input::placeholder {
+  color: #a4afbf;
+}
+
+.login-form input:focus {
+  outline: none;
+  border-color: #8ba5f4;
+  box-shadow: 0 0 0 4px #eaf0ff;
+}
+
+.login-form .login-error {
+  margin: -6px 0 14px;
+  color: #b94d49;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.login-form .login-submit {
+  flex-shrink: 0;
+  margin: 0;
+  min-height: 54px;
+}
+
+.login-divider {
+  margin: 32px 0;
+}
